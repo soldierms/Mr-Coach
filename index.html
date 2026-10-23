@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101828">
+  <meta name="description" content="A personal, mobile-friendly Platform and DevOps technical interview rehearsal coach.">
+  <title>Interview Coach — Platform & DevOps</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="menuToggle" class="icon-btn mobile-only" aria-label="Open question menu">☰</button>
+    <div class="brand-mark">IC</div>
+    <div class="brand-text"><strong>Interview Coach</strong><span>Platform & DevOps</span></div>
+    <div class="top-spacer"></div>
+    <span class="saved-pill"><span class="live-dot"></span> Progress saved on this device</span>
+  </header>
+  <main class="app-shell">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-heading"><span>QUESTION BANK</span><span id="listCount" class="tiny-count">30 questions</span></div>
+      <div class="search-wrap"><span>⌕</span><input id="searchBox" type="search" placeholder="Search questions…" aria-label="Search questions"></div>
+      <label class="filter-label" for="categoryFilter">Topic</label>
+      <select id="categoryFilter" class="select-control"></select>
+      <div class="question-list" id="questionList"></div>
+      <button id="clearSearchBtn" class="text-button">Reset filters</button>
+      <div class="sidebar-foot">
+        <div class="sidebar-foot-icon">✦</div>
+        <strong>Your real experience matters.</strong>
+        <p>Use these answers as a guide. Keep examples honest and explain what you personally did.</p>
+      </div>
+    </aside>
+    <section class="main-column">
+      <div class="welcome-row">
+        <div><div class="eyebrow">YOUR PERSONAL REHEARSAL SPACE</div><h1>Practice until it sounds like <em>you.</em></h1>
+          <p class="subhead">Built around your Platform Engineer experience at vAuto and Rally Health.</p></div>
+        <div class="progress-card"><div class="progress-top"><span>Learning progress</span><strong id="progressLabel">0% mastered</strong></div><div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+          <div class="stats"><div><strong id="practicedCount">0</strong><span>Practiced</span></div><div><strong id="masteredCount">0</strong><span>Mastered</span></div><div><strong id="totalCount">30</strong><span>Total</span></div></div></div>
+      </div>
+      <div class="mode-bar" role="tablist" aria-label="Practice mode">
+        <button id="modeLearn" class="mode-btn selected" role="tab"><span>📘</span><span><b>Learn</b><small>Understand it</small></span></button>
+        <button id="modeSpeak" class="mode-btn" role="tab"><span>🎙</span><span><b>Speak</b><small>Rehearse aloud</small></span></button>
+        <button id="modeMock" class="mode-btn" role="tab"><span>⚡</span><span><b>Mock interview</b><small>No peeking first</small></span></button>
+      </div>
+      <section id="practicePanel" class="practice-card">
+        <div class="question-meta"><span id="questionNumber" class="question-number">QUESTION 01 OF 30</span><span id="questionCategory" class="topic-chip">Career & behavioral</span></div>
+        <h2 id="questionTitle">Tell me about yourself.</h2>
+        <div class="coach-tip"><div class="tip-icon">✦</div><div><strong>In plain English</strong><p id="simpleExplanation"></p></div></div>
+        <div class="question-actions">
+          <button id="speakQuestionBtn" class="button button-light">🔊 Read question aloud</button>
+          <label class="rate-label">Voice speed <select id="speechRate"><option value="0.8">Slow</option><option value="0.95" selected>Normal</option><option value="1.1">Fast</option></select></label>
+          <button id="stopSpeakingBtn" class="button button-quiet">Stop audio</button>
+        </div>
+        <div class="rehearsal-box"><div class="rehearsal-head"><span class="rehearsal-icon">🎯</span><div><strong>Now it’s your turn</strong><p id="practicePrompt">Learn the idea first, then explain it in your own words.</p></div></div>
+          <div class="rehearsal-controls"><button id="recordBtn" class="button button-dark" hidden>🎙 Start speaking</button><button id="timerBtn" class="button button-outline">⏱ Start 60-second timer</button><span id="timerDisplay" class="timer-display">01:00</span><span id="timerHint" class="timer-hint">Practice at your own pace</span></div>
+          <label class="field-label" for="transcript">Your spoken answer / notes</label>
+          <textarea id="transcript" class="transcript" rows="4" placeholder="Use the microphone in Speak mode, or type your answer here…"></textarea>
+          <div class="transcript-note">Microphone support depends on your browser. You can always type or use your phone’s keyboard dictation.</div>
+        </div>
+        <div class="answer-actions"><button id="answerToggle" class="button button-primary" aria-expanded="false">Show suggested answer</button><button id="speakAnswerBtn" class="button button-light">🔊 Read answer aloud</button></div>
+        <div id="answerSection" class="answer-section" hidden>
+          <div class="answer-heading"><div><span class="eyebrow">A NATURAL ANSWER TO LEARN FROM</span><h3>Suggested interview answer</h3></div><span class="review-badge">Adapt it to your truth</span></div>
+          <p id="answerText" class="answer-text"></p>
+          <div class="example-box"><strong>🧩 Example to make it real</strong><p id="exampleText"></p></div>
+          <div id="termsWrap" class="terms-wrap"><h4>Key terms, simply explained</h4><ul id="termsList"></ul></div>
+          <div class="followups"><h4>Likely follow-up questions</h4><ul id="followupList"></ul></div>
+        </div>
+        <div class="notes-row"><label class="field-label" for="selfNotes">My notes for this question</label><textarea id="selfNotes" rows="2" placeholder="What do I want to remember? Which real example will I use?"></textarea>
+          <div class="rating-row"><label for="rating" class="field-label">How confident do you feel?</label><select id="rating" class="select-control small-select"><option value="">Not rated yet</option><option value="1">1 — Need help</option><option value="2">2 — Not confident</option><option value="3">3 — Getting there</option><option value="4">4 — Confident</option><option value="5">5 — Interview ready</option></select></div>
+        </div>
+        <div class="bottom-actions"><button id="practicedBtn" class="button button-outline">✓ Mark practiced</button><button id="masteredBtn" class="button button-success">★ I’ve mastered this</button><div class="nav-buttons"><button id="prevBtn" class="button button-light" disabled>← Previous</button><button id="nextBtn" class="button button-dark">Next question →</button></div></div>
+      </section>
+      <section class="footer-tools"><div><div class="eyebrow">YOUR DATA</div><strong>Your progress stays on this device</strong><p>Export a backup before switching from your Mac to your phone. Browser storage does not automatically sync between devices.</p></div><div class="data-actions"><button id="exportBtn" class="button button-light">↓ Export progress</button><button id="importBtn" class="button button-light">↑ Import progress</button><input type="file" id="importFile" accept="application/json" hidden></div></section>
+      <footer>Made for steady practice, honest examples, and clearer answers. <span>Use ← → keys to move between questions on desktop.</span></footer>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite">Saved</div>
+  <script src="questions.js"></script><script src="app.js"></script>
+</body>
+</html>
