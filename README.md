@@ -37,3 +37,16 @@ Text-to-speech is broadly available in modern browsers. Speech recognition suppo
 
 ## Customization
 Edit `questions.js` to add or update questions. Edit `styles.css` for visual design.
+
+
+## AI answer grading (optional secure backend)
+
+The app includes a “Rate my answer” panel. It needs a separately deployed backend; GitHub Pages cannot safely hold an AI provider secret. The starter Cloudflare Worker is in `worker/ai-grader.js`.
+
+1. In Cloudflare, create a Worker and paste the contents of `worker/ai-grader.js`.
+2. In the Worker settings, add a secret named `OPENAI_API_KEY` containing your OpenAI API key. Do not add the key to this GitHub repository or to the browser app.
+3. Deploy the Worker and copy its HTTPS URL.
+4. Open Mr Coach, select **Set up AI grading**, and paste the Worker URL. This setting is stored locally in that browser; repeat on another device if needed.
+5. Type or dictate an answer and select **Rate my answer**.
+
+The Worker sends the question and answer to the OpenAI API for evaluation. API usage may incur charges under your provider account. Review your provider's current pricing and privacy terms before use. Scores are practice feedback, not an objective hiring assessment. Keep answers free of sensitive personal information.

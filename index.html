@@ -58,6 +58,12 @@
           <label class="field-label" for="transcript">Your spoken answer / notes</label>
           <textarea id="transcript" class="transcript" rows="4" placeholder="Use the microphone in Speak mode, or type your answer here…"></textarea>
           <div class="transcript-note">Microphone support depends on your browser. You can always type or use your phone’s keyboard dictation.</div>
+          <div class="ai-grader-controls">
+            <button id="gradeAnswerBtn" class="button button-primary">★ Rate my answer</button>
+            <button id="configureAiGraderBtn" class="button button-light">Set up AI grading</button>
+          </div>
+          <p id="aiGraderStatus" class="ai-grader-status" role="status">AI grading needs secure backend setup.</p>
+          <section id="aiGradeResult" class="ai-grade-result" hidden aria-live="polite"></section>
         </div>
         <div class="answer-actions"><button id="answerToggle" class="button button-primary" aria-expanded="false">Show suggested answer</button><button id="speakAnswerBtn" class="button button-light">🔊 Read answer aloud</button></div>
         <div id="answerSection" class="answer-section" hidden>
