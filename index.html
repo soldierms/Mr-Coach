@@ -73,6 +73,20 @@
         <div class="bottom-actions"><button id="practicedBtn" class="button button-outline">✓ Mark practiced</button><button id="masteredBtn" class="button button-success">★ I’ve mastered this</button><div class="nav-buttons"><button id="prevBtn" class="button button-light" disabled>← Previous</button><button id="nextBtn" class="button button-dark">Next question →</button></div></div>
       </section>
       <section class="footer-tools"><div><div class="eyebrow">YOUR DATA</div><strong>Your progress stays on this device</strong><p>Export a backup before switching from your Mac to your phone. Browser storage does not automatically sync between devices.</p></div><div class="data-actions"><button id="exportBtn" class="button button-light">↓ Export progress</button><button id="importBtn" class="button button-light">↑ Import progress</button><input type="file" id="importFile" accept="application/json" hidden></div></section>
+      <section class="utility-card" id="importQuestionsSection">
+        <div class="utility-heading"><div><div class="eyebrow">EXPAND YOUR QUESTION BANK</div><h2>Import questions from documents or photos</h2><p>Upload a PDF, Word document, text file, or photo/screenshot. Review the extracted questions before adding them.</p></div></div>
+        <div class="upload-actions"><label class="button button-primary upload-label" for="questionFiles">＋ Choose files</label><input id="questionFiles" type="file" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,image/*,application/pdf" multiple hidden><span class="muted">PDF · DOCX · TXT · JPG · PNG · WEBP</span></div>
+        <p id="uploadStatus" class="upload-status" role="status">Files are processed in your browser. PDF/Word/photo extraction may require an internet connection to load the reading library.</p>
+        <label class="field-label" for="importReview">Review and edit extracted questions (JSON)</label>
+        <textarea id="importReview" rows="8" spellcheck="false" placeholder='Extracted questions will appear here. Review them, then click “Import reviewed questions”.'></textarea>
+        <div class="upload-actions"><button id="importQuestionsBtn" class="button button-dark">Import reviewed questions</button><button id="clearImportReviewBtn" class="button button-light">Clear review</button></div>
+        <p class="muted small-copy">Tip: question format is a list of objects with “title”, “answer”, and optionally “category”, “simple”, and “example”. If no answer is provided, the app labels it as a draft to fill in.</p>
+      </section>
+      <section class="utility-card" id="printQuestionsSection">
+        <div class="eyebrow">PRINT OR SAVE AS PDF</div><h2>Print selected questions</h2><p>Select the questions you want. Suggested answers are included; explanations, examples, and personal notes are excluded by default.</p>
+        <div class="upload-actions"><button id="selectAllPrintBtn" class="button button-light">Select all</button><button id="clearPrintBtn" class="button button-light">Clear selection</button><button id="printSelectedBtn" class="button button-primary">Print selected</button><span id="printSelectedCount" class="muted">0 selected</span></div>
+        <div id="printQuestionList" class="print-question-list"></div>
+      </section>
       <footer>Made for steady practice, honest examples, and clearer answers. <span>Use ← → keys to move between questions on desktop.</span></footer>
     </section>
   </main>

@@ -10,7 +10,10 @@ A responsive, installable web app for Mac and phone. Includes 18 question titles
 - 60-second practice timer
 - Suggested answers, simple explanations, examples, and follow-up questions
 - Notes, confidence ratings, practiced/mastered tracking
-- Local progress saving, JSON export/import
+- Local progress saving, JSON export/import (including imported questions)
+- Import questions from TXT/MD, text-based PDF, DOCX, and image files using in-browser extraction/OCR libraries
+- Review/edit extracted question JSON before importing; duplicate titles are skipped
+- Select questions and print suggested answers or save as PDF; explanations and notes are omitted by default
 - PWA manifest and service worker for install/offline use when served over HTTPS or localhost
 
 ## Run on your Mac
@@ -25,6 +28,9 @@ To install and use it like an app on your phone, host this folder on a secure HT
 - Android: Chrome → menu → Install app / Add to Home screen
 
 A local `localhost` URL on your Mac is not automatically accessible from your phone. If you want the same progress on both devices, use the Export progress / Import progress buttons for now; progress is stored locally per browser and does not automatically sync. Cross-device sync would need a backend or account service.
+
+## Import and print questions
+Open “Import questions from documents or photos,” choose one or more PDF, DOCX, TXT/MD, or image files, review the extracted JSON, then select “Import reviewed questions.” PDF, Word, and image processing loads browser libraries from CDNs and therefore needs an internet connection. OCR and question detection can be imperfect; always review the extracted questions and answers before importing. Scanned PDFs may need to be uploaded as page images. Imported questions are saved in this browser and included in the progress export. Use “Print selected questions” to print selected questions with suggested answers, or choose Save as PDF in the print dialog.
 
 ## Browser notes
 Text-to-speech is broadly available in modern browsers. Speech recognition support varies by browser and platform; if unavailable, type the answer or use device keyboard dictation. Microphone permission requires a secure context such as HTTPS or localhost.
