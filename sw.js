@@ -1,4 +1,4 @@
-const CACHE = "interview-coach-v3";
+const CACHE = "interview-coach-v4";
 
 const ASSETS = [
   "./",
