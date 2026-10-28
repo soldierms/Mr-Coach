@@ -129,6 +129,83 @@ function stopRecording() {
   isRecording=false;
   if ($("#recordBtn")) { $("#recordBtn").textContent="🎙 Start speaking"; $("#recordBtn").classList.remove("recording"); }
 }
+const AI_GRADER_ENDPOINT_KEY = "mrCoachAiGraderEndpoint";
+
+function configureAiGrader() {
+  const current = localStorage.getItem(AI_GRADER_ENDPOINT_KEY) || "";
+  const endpoint = prompt("Paste your secure AI grader endpoint URL (Cloudflare Worker URL ending in /grade). Leave blank to disable AI grading.", current);
+  if (endpoint === null) return;
+  const clean = endpoint.trim();
+  if (clean && !/^https:\/\//i.test(clean)) {
+    alert("Please use a secure HTTPS URL.");
+    return;
+  }
+  if (clean) localStorage.setItem(AI_GRADER_ENDPOINT_KEY, clean);
+  else localStorage.removeItem(AI_GRADER_ENDPOINT_KEY);
+  $("#aiGraderStatus").textContent = clean ? "AI grader endpoint saved on this device." : "AI grader not configured yet.";
+  showToast();
+  $("#toast").textContent = clean ? "AI grader endpoint saved" : "AI grader setting cleared";
+}
+
+function renderAiGrade(result) {
+  const panel = $("#aiGradeResult");
+  const score = Math.max(0, Math.min(100, Number(result.score) || 0));
+  panel.hidden = false;
+  panel.innerHTML = `
+    <div class="ai-score-line"><div><span class="eyebrow">AI PRACTICE SCORE</span><h3>${score}<small>/100</small></h3></div><span class="ai-score-label">${esc(result.overall || "Keep practicing")}</span></div>
+    <div class="ai-score-grid">${(result.criteria || []).map(c => `<div class="ai-criterion"><span>${esc(c.name || "Skill")}</span><strong>${Math.max(0,Math.min(100,Number(c.score)||0))}/100</strong><p>${esc(c.feedback || "")}</p></div>`).join("")}</div>
+    <div class="ai-feedback-block"><h4>What you did well</h4><ul>${(result.strengths || []).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="ai-feedback-block"><h4>What to improve</h4><ul>${(result.improvements || []).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="ai-feedback-block"><h4>Suggested stronger answer</h4><p>${esc(result.sample_answer || "Try again with a clearer explanation and a concrete example.")}</p></div>
+    <p class="ai-disclaimer">${esc(result.note || "Use feedback as practice guidance. Keep all examples truthful to your experience.")}</p>`;
+  const q = byId(currentId);
+  if (q) {
+    const history = JSON.parse(localStorage.getItem("mrCoachAiScores") || "{}");
+    history[q.id] = {score, date:new Date().toISOString(), overall:result.overall || ""};
+    localStorage.setItem("mrCoachAiScores", JSON.stringify(history));
+  }
+}
+
+async function gradeMyAnswer() {
+  const answer = $("#transcript").value.trim();
+  if (!answer) { alert("Speak or type your answer first, then ask Mr Coach to rate it."); return; }
+  const endpoint = localStorage.getItem(AI_GRADER_ENDPOINT_KEY);
+  if (!endpoint) {
+    alert("AI grading needs a secure grader endpoint first. Choose “Set up AI grading” and paste the endpoint after the secure backend is deployed.");
+    return;
+  }
+  const q = byId(currentId);
+  const button = $("#gradeAnswerBtn");
+  button.disabled = true;
+  button.textContent = "Rating your answer…";
+  $("#aiGradeResult").hidden = true;
+  $("#aiGraderStatus").textContent = "Sending your answer for evaluation…";
+  try {
+    const response = await fetch(endpoint, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        question:q.title,
+        category:q.category,
+        suggested_answer:q.answer,
+        example:q.example,
+        answer,
+        background:"Platform/DevOps Engineer with experience at vAuto and Rally Health. Documented tools include AWS, Terraform, EKS/Kubernetes, Docker, Helm, GitHub Actions, Datadog and CloudWatch. Do not invent work experience or claim the user used a tool unless supplied here."
+      })
+    });
+    const data = await response.json().catch(()=>({error:"The grader returned an unreadable response."}));
+    if (!response.ok) throw new Error(data.error || "The grading service could not evaluate this answer.");
+    renderAiGrade(data);
+    $("#aiGraderStatus").textContent = "Answer rated. Your score is saved on this device.";
+  } catch (error) {
+    $("#aiGraderStatus").textContent = "Could not rate the answer.";
+    alert("AI grading failed: " + (error.message || "Check the endpoint and try again."));
+  } finally {
+    button.disabled = false;
+    button.textContent = "★ Rate my answer";
+  }
+}
+
 function markPracticed() { practiced.add(currentId); persist(); renderList(); $("#toast").textContent="Marked as practiced"; showToast(); }
 function markMastered() {
   mastered.add(currentId); practiced.add(currentId); persist(); renderList();
@@ -246,6 +323,9 @@ function init() {
   $("#speakAnswerBtn").addEventListener("click",()=>speak(byId(currentId).answer));
   $("#stopSpeakingBtn").addEventListener("click",stopSpeaking);
   $("#recordBtn").addEventListener("click",startRecording);
+  $("#gradeAnswerBtn").addEventListener("click",gradeMyAnswer);
+  $("#configureAiGraderBtn").addEventListener("click",configureAiGrader);
+  $("#aiGraderStatus").textContent = localStorage.getItem(AI_GRADER_ENDPOINT_KEY) ? "AI grader endpoint saved on this device." : "AI grader needs secure backend setup.";
   $("#prevBtn").addEventListener("click",()=>{const i=QUESTIONS.findIndex(q=>q.id===currentId);if(i>0)selectQuestion(QUESTIONS[i-1].id);});
   $("#nextBtn").addEventListener("click",()=>{const i=QUESTIONS.findIndex(q=>q.id===currentId);if(i>=0&&i<QUESTIONS.length-1)selectQuestion(QUESTIONS[i+1].id);});
   $("#practicedBtn").addEventListener("click",markPracticed);
